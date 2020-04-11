@@ -46,13 +46,13 @@ def createtodo(request):
 		return render(request, 'todo/createtodo.html', {'form':TodoForm})
 	else:
 		try:
-			form = TodoForm(request.POST)
+			form = TodoForm(request.POST, request.FILES)
 			newtodo = form.save(commit = False)
 			newtodo.user = request.user
 			newtodo.save()
 			return redirect('currenttodos')
 		except ValueError:
-			return render(request, 'todo/createtodo.html', {'form':TodoForm, 'error': 'There is a value error. Try Again'})
+			return render(request, 'todo/createtodo.html', {'form':TodoForm})
 
 @login_required
 def logoutuser(request):
@@ -72,7 +72,7 @@ def viewtodo(request, todo_pk):
 		return render(request, 'todo/viewtodo.html',{'todo':todo, 'form': form})
 	else:
 		try:
-			form = TodoForm(request.POST, instance = todo)
+			form = TodoForm(request.POST, request.FILES, instance = todo)
 			form.save()
 			return redirect('currenttodos')
 		except ValueError:
